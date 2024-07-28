@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -183,6 +184,39 @@ public class EmployeeService {
     public void getListOfEmployeeInSalaryDescendingOrder(){
         System.out.println("Get the names of employees sorted by their salary in descending order.");
         employeeList.stream().sorted(Comparator.comparing(Employee::getSalary).reversed()).map(Employee::getName).forEach(System.out::println);
+    }
+//    public void getOldEmployeeInDepartment(){
+//        System.out.println("Find the oldest employee in each department.");
+//        employeeList.stream()
+//                .collect(Collectors.groupingBy(Employee::getDepartment,
+//                        Collectors.groupingBy(Employee::getAge))).forEach((department, employees) -> {
+//                    System.out.println("Department: " + department);
+//                    employees.forEach();});
+
+    public void getEmployeesFullNameSeperatedCommon() {
+        System.out.println("Merge the names and surnames of employees into a single string, separated by commas.");
+        employeeList.stream()
+                .map((employee -> employee.getName() + "," + employee.getSurname()))
+                .forEach(System.out::println);
+    }
+    public void getTotalExperience(){
+       Long experience= employeeList.stream()
+                .mapToLong(employee -> ChronoUnit.YEARS.between(employee.getStartDate(), LocalDate.now()))
+                .sum();
+        System.out.println(experience);
+    }
+    public void getLongestServingEmployee(){
+        System.out.println("Find the longest-serving employee.");
+        Employee employee=employeeList.stream()
+                .min(Comparator.comparing(Employee::getStartDate)).get();
+        System.out.println(employee.toString());
+    }
+
+    public void getCountSamePosition(){
+        System.out.println("Count the number of employees with each position.");
+        employeeList.stream().collect(Collectors.groupingBy(Employee::getPosition,Collectors.counting()))
+                .forEach(((position, count) -> System.out.println("Position: "+position+"\nCount: "+count)));
+
     }
 
 }
